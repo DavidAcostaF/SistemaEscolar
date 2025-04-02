@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Materias{% endblock %}
+
+{% block content %}
+<div class="text-center mt-3 mb-2">
+  <h6><strong>Materias</strong></h6>
+</div>
+
+<div class="accordion px-4" id="accordionMaterias">
+  <!-- Materia: Español -->
+  <div class="accordion-item border-0 mb-3">
+    <h2 class="accordion-header">
+      <button class="btn btn-dark w-100 rounded-pill text-white" type="button" data-bs-toggle="collapse" data-bs-target="#espaniol">
+        Español
+      </button>
+    </h2>
+    <div id="espaniol" class="accordion-collapse collapse show">
+      <div class="border rounded p-3 mt-2">
+        <strong>Primer Parcial</strong><br>• 9.0<br>
+        <strong>Segundo Parcial</strong><br>• 8.5<br>
+        <strong>Tercer Parcial</strong><br>• 9.2
+      </div>
+    </div>
+  </div>
+
+  <!-- Materia: Matemáticas -->
+  <div class="accordion-item border-0 mb-3">
+    <h2 class="accordion-header">
+      <button class="btn btn-outline-dark w-100 rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#matematicas">
+        Matemáticas
+      </button>
+    </h2>
+    <div id="matematicas" class="accordion-collapse collapse">
+      <div class="border rounded p-3 mt-2">
+        <strong>Primer Parcial</strong><br>• 8.8<br>
+        <strong>Segundo Parcial</strong><br>• 9.1<br>
+        <strong>Tercer Parcial</strong><br>• 8.9
+      </div>
+    </div>
+  </div>
+
+  <!-- Materia: Historia -->
+  <div class="accordion-item border-0 mb-3">
+    <h2 class="accordion-header">
+      <button class="btn btn-outline-dark w-100 rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#historia">
+        Historia
+      </button>
+    </h2>
+    <div id="historia" class="accordion-collapse collapse">
+      <div class="border rounded p-3 mt-2">
+        <strong>Primer Parcial</strong><br>• 9.0<br>
+        <strong>Segundo Parcial</strong><br>• 8.8<br>
+        <strong>Tercer Parcial</strong><br>• 9.3
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note mt-3">
+  La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
+</div>
+{% endblock %}

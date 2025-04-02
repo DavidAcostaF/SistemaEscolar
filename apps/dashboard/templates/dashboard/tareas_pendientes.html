@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Tareas Pendientes{% endblock %}
+
+{% block content %}
+<div class="text-center mt-3 mb-2">
+  <h6><strong>Tareas Pendientes</strong></h6>
+</div>
+
+<div class="px-4">
+  <!-- Español -->
+  <div class="mb-3">
+    <button class="btn btn-dark w-100 rounded-pill text-white" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#tareasEspanol" 
+            aria-expanded="false" 
+            aria-controls="tareasEspanol">
+      Español
+    </button>
+    <div class="collapse mt-2" id="tareasEspanol">
+      <div class="d-grid gap-2">
+        <button class="btn btn-outline-dark rounded-pill text-start">• Asignación 1. Presentación</button>
+        <button class="btn btn-outline-dark rounded-pill text-start">• Asignación 2. Resumen</button>
+        <button class="btn btn-outline-dark rounded-pill text-start">• Asignación 3. Mapa Conceptual</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Otras materias (solo botones sin despliegue de momento) -->
+  <div class="mb-3">
+    <button class="btn btn-outline-dark w-100 rounded-pill">Matemáticas</button>
+  </div>
+  <div class="mb-3">
+    <button class="btn btn-outline-dark w-100 rounded-pill">Historia</button>
+  </div>
+  <div class="mb-3">
+    <button class="btn btn-outline-dark w-100 rounded-pill">Formación Cívica y Ética</button>
+  </div>
+</div>
+
+<div class="footer-note mt-3">
+  La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
+</div>
+{% endblock %}
