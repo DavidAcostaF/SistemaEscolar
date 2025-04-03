@@ -1,106 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
-      background-color: #111;
-      color: white;
+      margin: 0;
+      padding: 0;
+      background-color: white;
       font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
+
     .mobile-container {
-      max-width: 400px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 10px;
+      width: 300px;
+      height: 600px;
+      background-color: white;
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
       color: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 20px;
     }
+
     .tab-header {
       display: flex;
+      margin: -20px -20px 20px -20px;
     }
-    .tab-header .tab {
+
+    .tab {
       flex: 1;
-      padding: 10px;
       text-align: center;
-      cursor: pointer;
+      padding: 12px;
+      background-color: white;
+      color: #333;
+      font-weight: normal;
     }
+
     .tab.active {
       background-color: #111;
       color: white;
       font-weight: bold;
     }
+
     .form-control {
       border-radius: 50px;
       padding: 12px 20px;
       margin-bottom: 15px;
     }
-    .btn-eye {
-      border-top-right-radius: 50px;
-      border-bottom-right-radius: 50px;
+
+    .input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .input-group input {
+      border-radius: 50px;
+      width: 100%;
+      padding: 12px 50px 12px 20px;
+      border: 1px solid #ced4da;
+    }
+
+    .input-group .btn-eye {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50px;
+      border: none;
       background-color: #111;
       color: white;
+      border-top-right-radius: 50px;
+      border-bottom-right-radius: 50px;
     }
-    .btn-register {
+
+    .btn-login {
       border-radius: 50px;
       background-color: #111;
       color: white;
       padding: 12px;
-      margin-top: 10px;
       width: 100%;
     }
-    .text-eye {
-      background: transparent;
-      border: none;
-      color: white;
-    }
+
     .footer-text {
       font-size: 0.9rem;
       color: gray;
       text-align: center;
-      margin-top: 15px;
+      margin-top: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="mobile-container p-3">
-    <h5 class="text-center mb-3">Registro</h5>
+  <div class="mobile-container">
     <div class="tab-header">
       <div class="tab active">Sistema <span class="text-muted">Escuela</span></div>
-      <div class="tab">Registro</div>
+      <div class="tab">Iniciar Sesión</div>
     </div>
 
     <form>
-      <label class="form-label mt-3">Crear Usuario</label>
+      <label class="form-label">Usuario</label>
       <input type="text" class="form-control" placeholder="...">
 
-      <label class="form-label">Usuario del Alumno</label>
-      <input type="text" class="form-control" placeholder="...">
-
-      <label class="form-label">Crear Contraseña</label>
+      <label class="form-label">Contraseña</label>
       <div class="input-group">
-        <input type="password" class="form-control" placeholder="...">
-        <button class="btn btn-eye" type="button">
-          <i class="bi bi-eye"></i>
+        <input type="password" id="passwordInput" placeholder="...">
+        <button class="btn-eye" type="button" onclick="togglePassword()">
+          <i class="bi bi-eye" id="eyeIcon"></i>
         </button>
       </div>
 
-      <label class="form-label">Confirmar Contraseña</label>
-      <div class="input-group">
-        <input type="password" class="form-control" placeholder="...">
-        <button class="btn btn-eye" type="button">
-          <i class="bi bi-eye"></i>
-        </button>
-      </div>
-
-      <button type="submit" class="btn btn-register">Registrarse</button>
-      <div class="footer-text">Iniciar Sesión</div>
+      <button type="submit" class="btn btn-login">Iniciar Sesión</button>
+      <div class="footer-text">Regístrate</div>
     </form>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("passwordInput");
+      const icon = document.getElementById("eyeIcon");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+      }
+    }
+  </script>
 </body>
 </html>
