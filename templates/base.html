@@ -152,7 +152,7 @@
       <a href="{% url 'dashboard:tareas_pendientes' %}" class="menu-link p-3 {% if current_page == 'tareas' %}active{% endif %}">Tareas Pendientes</a>
       <a href="{% url 'dashboard:mensajeria' %}" class="menu-link p-3 {% if current_page == 'mensajeria' %}active{% endif %}">Mensajería</a>
       <a class="menu-link p-3 {% if current_page == 'configuracion' %}active{% endif %}">Configuración</a>
-      <div class="btn-close-session">Cerrar Sesión</div>
+      <div class="btn-close-session"><a href="{% url 'users:login' %}" class="text-reset text-decoration-none">Cerrar Sesión</a></div>
     </div>
 
     <!-- Fondo gris -->
