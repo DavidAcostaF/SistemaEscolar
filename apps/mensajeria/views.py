@@ -3,8 +3,7 @@ from django.views.generic import TemplateView
 
 # Create your views here.
 
-class IndexView(TemplateView):
-    template_name = 'dashboard/index.html'
 
 
-
+class MensajeriaView(TemplateView):
+    template_name = 'mensajeria/mensajeria.html'

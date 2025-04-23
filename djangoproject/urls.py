@@ -22,6 +22,10 @@ urlpatterns = [
     
     path('', include('apps.dashboard.urls')),
     path('', include('apps.users.urls')),
+    path('', include('apps.materias.urls')),
+    path('', include('apps.calificaciones.urls')),
+    path('', include('apps.tareas.urls')),
+    path('', include('apps.mensajeria.urls')),
     path('admin/', admin.site.urls),
 
     # path("api/", api.urls),

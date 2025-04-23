@@ -2,9 +2,5 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 # Create your views here.
-
-class IndexView(TemplateView):
-    template_name = 'dashboard/index.html'
-
-
-
+class MateriasView(TemplateView):
+    template_name = 'materias/materias.html'

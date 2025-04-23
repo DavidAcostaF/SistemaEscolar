@@ -46,7 +46,13 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.utility',
     'apps.dashboard',
-
+    'apps.tareas',
+    'apps.calificaciones',
+    'apps.materias',
+    'apps.mensajeria',
+    'apps.alertas',
+    'apps.sincronizacion',
+    'apps.moodle',
     # Third party apps
     "crispy_forms",
     "crispy_bootstrap5",

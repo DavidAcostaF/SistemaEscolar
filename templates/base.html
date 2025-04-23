@@ -147,10 +147,10 @@
       <h5><strong>Sistema</strong> Escuela</h5>
       <br>
       <a href="{% url 'dashboard:index' %}" class="menu-link p-3 {% if current_page == 'inicio' %}active{% endif %}">Inicio</a>
-      <a href="{% url 'dashboard:materias' %}" class="menu-link p-3{% if current_page == 'materias' %}active{% endif %}">Materias</a>
-      <a href="{% url 'dashboard:calificaciones' %}" class="menu-link  p-3 {% if current_page == 'calificaciones' %}active{% endif %}">Calificaciones</a>
-      <a href="{% url 'dashboard:tareas_pendientes' %}" class="menu-link p-3 {% if current_page == 'tareas' %}active{% endif %}">Tareas Pendientes</a>
-      <a href="{% url 'dashboard:mensajeria' %}" class="menu-link p-3 {% if current_page == 'mensajeria' %}active{% endif %}">Mensajería</a>
+      <a href="{% url 'materias:materias' %}" class="menu-link p-3{% if current_page == 'materias' %}active{% endif %}">Materias</a>
+      <a href="{% url 'calificaciones:calificaciones' %}" class="menu-link  p-3 {% if current_page == 'calificaciones' %}active{% endif %}">Calificaciones</a>
+      <a href="{% url 'tareas:tareas_pendientes' %}" class="menu-link p-3 {% if current_page == 'tareas' %}active{% endif %}">Tareas Pendientes</a>
+      <a href="{% url 'mensajeria:mensajeria' %}" class="menu-link p-3 {% if current_page == 'mensajeria' %}active{% endif %}">Mensajería</a>
       <a class="menu-link p-3 {% if current_page == 'configuracion' %}active{% endif %}">Configuración</a>
       <div class="btn-close-session"><a href="{% url 'users:login' %}" class="text-reset text-decoration-none">Cerrar Sesión</a></div>
     </div>
