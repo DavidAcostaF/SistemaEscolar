@@ -43,6 +43,24 @@ class RegisterForm(forms.ModelForm):
         if not data:
             raise forms.ValidationError("El usuario no fue encontrado en Moodle.")
 
-        # Guardamos el ID encontrado en una variable interna temporal
-        self.moodle_user_id = data[0]['id']
+        self.alumno_moodle_id = data[0]['id']
+        # self.objects.alumno_moodle_id = data[0]['username']
         return username
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Las contraseñas no coinciden.")
+
+        return cleaned_data
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        user.alumno_moodle_id = self.alumno_moodle_id
+        if commit:
+            user.save()
+        return user
