@@ -169,3 +169,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+
+# Moodle settings
+MOODLE_API_URL = os.getenv('MOODLE_API_URL')
+MOODLE_TOKEN = os.getenv('MOODLE_TOKEN')

@@ -5,6 +5,8 @@ from django.db import models
 
 
 class User(AbstractUser):
+    alumno_moodle_id = models.IntegerField(unique=True)
+
     class Meta:
         db_table = "users"
         verbose_name = "User"

@@ -7,57 +7,37 @@
   <h6><strong>Materias</strong></h6>
 </div>
 
-<div class="accordion px-4" id="accordionMaterias">
-  <!-- Materia: Español -->
-  <div class="accordion-item border-0 mb-3">
-    <h2 class="accordion-header">
-      <button class="btn btn-dark w-100 rounded-pill p-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#espaniol">
-        Español
-      </button>
-    </h2>
-    <div id="espaniol" class="accordion-collapse collapse show">
-      <div class="border rounded p-3 mt-2">
-        <strong>Primer Parcial</strong><br>• 9.0<br>
-        <strong>Segundo Parcial</strong><br>• 8.5<br>
-        <strong>Tercer Parcial</strong><br>• 9.2
+<form method="post" class="text-center mb-4">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary rounded-pill px-4" type="submit">Buscar materias</button>
+</form>
+
+{% if materias %}
+  <div class="accordion px-4" id="accordionMaterias">
+    {% for materia in materias %}
+      <div class="accordion-item border-0 mb-3">
+        <h2 class="accordion-header">
+          <button class="btn btn-outline-dark w-100 rounded-pill p-3 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#materia{{ forloop.counter }}">
+            {{ materia.fullname }}
+          </button>
+        </h2>
+        <div id="materia{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+          <div class="border rounded p-3 mt-2">
+            <strong>Nombre corto:</strong><br>• {{ materia.shortname }}<br>
+            {% if materia.summary %}
+              <strong>Descripción:</strong><br>• {{ materia.summary|safe }}
+            {% else %}
+              <em>Sin descripción disponible.</em>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </div>
+    {% endfor %}
   </div>
 
-  <!-- Materia: Matemáticas -->
-  <div class="accordion-item border-0 mb-3">
-    <h2 class="accordion-header">
-      <button class="btn btn-outline-dark w-100 rounded-pill p-3" type="button" data-bs-toggle="collapse" data-bs-target="#matematicas">
-        Matemáticas
-      </button>
-    </h2>
-    <div id="matematicas" class="accordion-collapse collapse">
-      <div class="border rounded p-3 mt-2">
-        <strong>Primer Parcial</strong><br>• 8.8<br>
-        <strong>Segundo Parcial</strong><br>• 9.1<br>
-        <strong>Tercer Parcial</strong><br>• 8.9
-      </div>
-    </div>
+  <div class="footer-note mt-3">
+    La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
   </div>
-
-  <!-- Materia: Historia -->
-  <div class="accordion-item border-0 mb-3">
-    <h2 class="accordion-header">
-      <button class="btn btn-outline-dark w-100 rounded-pill p-3" type="button" data-bs-toggle="collapse" data-bs-target="#historia">
-        Historia
-      </button>
-    </h2>
-    <div id="historia" class="accordion-collapse collapse">
-      <div class="border rounded p-3 mt-2">
-        <strong>Primer Parcial</strong><br>• 9.0<br>
-        <strong>Segundo Parcial</strong><br>• 8.8<br>
-        <strong>Tercer Parcial</strong><br>• 9.3
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="footer-note mt-3">
-  La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
-</div>
+{% endif %}
 {% endblock %}
