@@ -2,6 +2,9 @@ from django import forms
 from .models import User  # usa tu modelo extendido
 from django.conf import settings
 import requests
+from django.contrib.auth.forms import AuthenticationForm
+
+
 class RegisterForm(forms.ModelForm):
     alumno_moodle = forms.CharField(label='Username de moodle')
 
@@ -64,3 +67,7 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label="Usuario", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={'class': 'form-control'}))

@@ -1,143 +1,145 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: white;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+{% load crispy_forms_tags %}
 
-    .mobile-container {
-      width: 300px;
-      height: 600px;
-      background-color: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      color: black;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding: 20px;
-    }
 
-    .tab-header {
-      display: flex;
-      margin: -20px -20px 20px -20px;
-    }
+{% block content %}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
 
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px;
-      background-color: white;
-      color: #333;
-      font-weight: normal;
-    }
+  .mobile-container {
+    width: 300px;
+    height: 600px;
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+  }
 
-    .tab.active {
-      background-color: #111;
-      color: white;
-      font-weight: bold;
-    }
+  .tab-header {
+    display: flex;
+    margin: -20px -20px 20px -20px;
+  }
 
-    .form-control {
-      border-radius: 50px;
-      padding: 12px 20px;
-      margin-bottom: 15px;
-    }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background-color: white;
+    color: #333;
+    font-weight: normal;
+  }
 
-    .input-group {
-      position: relative;
-      margin-bottom: 15px;
-    }
+  .tab.active {
+    background-color: #111;
+    color: white;
+    font-weight: bold;
+  }
 
-    .input-group input {
-      border-radius: 50px;
-      width: 100%;
-      padding: 12px 50px 12px 20px;
-      border: 1px solid #ced4da;
-    }
+  .form-control {
+    border-radius: 50px;
+    padding: 12px 20px;
+    margin-bottom: 15px;
+  }
 
-    .input-group .btn-eye {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      width: 50px;
-      border: none;
-      background-color: #111;
-      color: white;
-      border-top-right-radius: 50px;
-      border-bottom-right-radius: 50px;
-    }
+  .input-group {
+    position: relative;
+    margin-bottom: 15px;
+  }
 
-    .btn-login {
-      border-radius: 50px;
-      background-color: #111;
-      color: white;
-      padding: 12px;
-      width: 100%;
-    }
+  .input-group input {
+    border-radius: 50px;
+    width: 100%;
+    padding: 12px 50px 12px 20px;
+    border: 1px solid #ced4da;
+  }
 
-    .footer-text {
-      font-size: 0.9rem;
-      color: gray;
-      text-align: center;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="mobile-container">
-    <div class="tab-header">
-      <div class="tab active">Sistema <span class="text-muted">Escuela</span></div>
-      <div class="tab">Iniciar Sesión</div>
-    </div>
+  .input-group .btn-eye {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50px;
+    border: none;
+    background-color: #111;
+    color: white;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+  }
 
-    <form>
-      <label class="form-label">Usuario</label>
-      <input type="text" class="form-control" placeholder="...">
+  .btn-login {
+    border-radius: 50px;
+    background-color: #111;
+    color: white;
+    padding: 12px;
+    width: 100%;
+  }
 
-      <label class="form-label">Contraseña</label>
-      <div class="input-group">
-        <input type="password" id="passwordInput" placeholder="...">
-        <button class="btn-eye" type="button" onclick="togglePassword()">
-          <i class="bi bi-eye" id="eyeIcon"></i>
-        </button>
-      </div>
+  .footer-text {
+    font-size: 0.9rem;
+    color: gray;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+</style>
 
-      <a type="submit" class="btn btn-login" href="{%url 'dashboard:index'%}">Iniciar Sesión</a>
-      <div class="footer-text"><a href="{%url 'users:register'%}" class="text-reset text-decoration-none" >Regístrate</a></div>
-    </form>
+<div class="mobile-container">
+  <div class="tab-header">
+    <div class="tab active">Sistema <span class="text-muted">Escuela</span></div>
+    <div class="tab">Iniciar Sesión</div>
   </div>
 
-  <script>
-    function togglePassword() {
-      const input = document.getElementById("passwordInput");
-      const icon = document.getElementById("eyeIcon");
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("bi-eye");
-        icon.classList.add("bi-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("bi-eye-slash");
-        icon.classList.add("bi-eye");
-      }
+  <form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger py-1">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    {{ form.username|as_crispy_field }}
+
+    <label class="form-label">Contraseña</label>
+    <div class="input-group">
+      {{ form.password }}
+      <button class="btn-eye" type="button" onclick="togglePassword()">
+        <i class="bi bi-eye" id="eyeIcon"></i>
+      </button>
+    </div>
+
+    <button type="submit" class="btn btn-login">Iniciar Sesión</button>
+    <div class="footer-text">
+      <a href="{% url 'users:register' %}" class="text-reset text-decoration-none">Regístrate</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById("id_password");
+    const icon = document.getElementById("eyeIcon");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("bi-eye");
+      icon.classList.add("bi-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.remove("bi-eye-slash");
+      icon.classList.add("bi-eye");
     }
-  </script>
-</body>
-</html>
+  }
+</script>
+{% endblock %}
