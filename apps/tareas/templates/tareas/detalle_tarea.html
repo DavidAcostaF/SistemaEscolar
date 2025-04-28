@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Descripción{% endblock %}
+
+{% block content %}
+<div class="text-center mt-3 mb-2">
+  <h6><strong>{{ nombre }}</strong></h6>
+</div>
+
+<div class="px-4">
+  <div class="border rounded p-3 bg-light">
+    <p><strong>Instrucciones:</strong></p>
+    <div>{{ intro|safe }}</div>
+
+    <hr>
+
+    <p><strong>Fechas importantes:</strong></p>
+    <ul>
+      <li><strong>Disponible desde:</strong> {{ allowsubmissionsfromdate|default:"No disponible" }}</li>
+      <li><strong>Fecha límite de entrega:</strong> {{ duedate|default:"No disponible" }}</li>
+    </ul>
+
+    
+    {% if estado_entrega == "Entrega vencida" %}
+      <div class="alert alert-danger mt-2" role="alert">
+        🚨 {{ estado_entrega }}
+      </div>
+    {% elif estado_entrega == "A tiempo" %}
+      <div class="alert alert-success mt-2" role="alert">
+        ✅ {{ estado_entrega }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="footer-note mt-3">
+  Tarea actual encargada por el maestro de la materia impartida. Cualquier duda, favor de comunicarse con el maestro responsable.
+</div>
+{% endblock %}

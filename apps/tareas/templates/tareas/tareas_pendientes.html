@@ -8,38 +8,38 @@
 </div>
 
 <div class="px-4">
-  <!-- Español -->
-  <div class="mb-3">
-    <button class="btn btn-dark w-100 rounded-pill text-white p-3" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#tareasEspanol" 
-            aria-expanded="false" 
-            aria-controls="tareasEspanol">
-      Español
-    </button>
-    <div class="collapse mt-2" id="tareasEspanol">
-      <div class="d-grid gap-2">
-        <button class="btn btn-outline-dark rounded-pill text-start p-2">• Asignación 1. Presentación</button>
-        <button class="btn btn-outline-dark rounded-pill text-start">• Asignación 2. Resumen</button>
-        <button class="btn btn-outline-dark rounded-pill text-start">• Asignación 3. Mapa Conceptual</button>
-      </div>
+  {% for materia in materias %}
+    <div class="mb-3">
+      {% if materia.tareas %}
+        <!-- Materias con tareas pendientes: botón expandible -->
+        <button class="btn {% if forloop.first %}btn-dark text-white{% else %}btn-outline-dark{% endif %} w-100 rounded-pill p-3"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#tareas{{ forloop.counter }}"
+                aria-expanded="false"
+                aria-controls="tareas{{ forloop.counter }}">
+          {{ materia.nombre }}
+        </button>
+        <div class="collapse mt-2" id="tareas{{ forloop.counter }}">
+          <div class="d-grid gap-2">
+            {% for tarea in materia.tareas %}
+              <a href="{% url 'tareas:detalle_tarea' materia.id tarea.id %}" class="btn btn-outline-dark rounded-pill text-start p-2">
+                • {{ tarea.nombre }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <!-- Materias sin tareas pendientes: botón simple -->
+        <button class="btn btn-outline-dark w-100 rounded-pill p-3">
+          {{ materia.nombre }}
+        </button>
+      {% endif %}
     </div>
-  </div>
-
-  <!-- Otras materias (solo botones sin despliegue de momento) -->
-  <div class="mb-3">
-    <button class="btn btn-outline-dark w-100 rounded-pill p-3">Matemáticas</button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-outline-dark w-100 rounded-pill p-3">Historia</button>
-  </div>
-  <div class="mb-3">
-    <button class="btn btn-outline-dark w-100 rounded-pill p-3">Formación Cívica y Ética</button>
-  </div>
+  {% endfor %}
 </div>
 
-<div class="footer-note mt-3">
+<div class="footer-note mt-3 text-center text-muted">
   La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
 </div>
 {% endblock %}

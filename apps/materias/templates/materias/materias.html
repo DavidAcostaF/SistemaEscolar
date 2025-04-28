@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block title %}Materias{% endblock %}
 
 {% block content %}
@@ -7,37 +6,35 @@
   <h6><strong>Materias</strong></h6>
 </div>
 
-<form method="post" class="text-center mb-4">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary rounded-pill px-4" type="submit">Buscar materias</button>
-</form>
-
-{% if materias %}
-  <div class="accordion px-4" id="accordionMaterias">
-    {% for materia in materias %}
-      <div class="accordion-item border-0 mb-3">
-        <h2 class="accordion-header">
-          <button class="btn btn-outline-dark w-100 rounded-pill p-3 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#materia{{ forloop.counter }}">
-            {{ materia.fullname }}
-          </button>
-        </h2>
-        <div id="materia{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
-          <div class="border rounded p-3 mt-2">
-            <strong>Nombre corto:</strong><br>• {{ materia.shortname }}<br>
-            {% if materia.summary %}
-              <strong>Descripción:</strong><br>• {{ materia.summary|safe }}
-            {% else %}
-              <em>Sin descripción disponible.</em>
-            {% endif %}
-          </div>
+<div class="accordion px-4" id="accordionMaterias">
+  {% for materia in materias %}
+    <div class="accordion-item border-0 mb-3">
+      <h2 class="accordion-header">
+        <button class="btn {% if forloop.first %}btn-dark text-white{% else %}btn-outline-dark{% endif %} w-100 rounded-pill p-3 text-start"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#materia{{ forloop.counter }}">
+          {{ materia.nombre }}
+        </button>
+      </h2>
+      <div id="materia{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+        <div class="border rounded p-3 mt-2">
+          {% if materia.parciales %}
+            <ul class="list-unstyled">
+              {% for parcial in materia.parciales %}
+                <li><strong>{{ parcial.nombre }}</strong> – Promedio: {{ parcial.promedio }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>No hay calificaciones disponibles para esta materia.</em>
+          {% endif %}
         </div>
       </div>
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
+</div>
 
-  <div class="footer-note mt-3">
-    La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
-  </div>
-{% endif %}
+<div class="footer-note mt-3 text-center text-muted">
+  La siguiente información es del año cursado actualmente por el alumno. Ante cualquier duda, favor de comunicarse con el maestro responsable.
+</div>
 {% endblock %}

@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure--*pm=dxzeef7(yz)1h9%u(8-&+jjlo-dg!^a!*mind%3x&-*ur
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_filters",
     "ninja_extra",
+    "django_q"
 
 ]
 
@@ -98,8 +99,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoproject.wsgi.application'
 
-
-
+Q_CLUSTER = {
+    'name': 'DjangoQCluster',
+    'workers': 4,                 # Número de workers (hilos) procesando tareas
+    'timeout': 90,                # Tiempo máximo permitido por tarea
+    'retry': 120,                 # Reintento si una tarea falla
+    'queue_limit': 50,            # Límite de cola
+    'bulk': 10,                   # Número de tareas a cargar a la vez
+    'orm': 'default',             # Usa la base de datos de Django para almacenar tareas
+}
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
