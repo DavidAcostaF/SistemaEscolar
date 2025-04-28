@@ -22,12 +22,10 @@ class Command(BaseCommand):
             for materia_alumno in materias_alumno:
                 materia = materia_alumno.materia
 
-                # 1️⃣ Obtener las secciones del curso (parciales)
                 secciones_response = call_moodle_api('core_course_get_contents', {
                     'courseid': materia.moodle_id
                 })
 
-                # 2️⃣ Mapear tareas por sección
                 for seccion in secciones_response:
                     nombre_seccion = seccion.get('name', 'Sin sección').strip() or 'Sin sección'
 
@@ -35,7 +33,6 @@ class Command(BaseCommand):
                         if modulo.get('modname') == 'assign':
                             tarea_id = modulo['instance']
 
-                            # 3️⃣ Consultar detalles de la tarea (debería hacerse mejor pero con la info del módulo es suficiente)
                             tareas_response = call_moodle_api('mod_assign_get_assignments', {
                                 'courseids[0]': materia.moodle_id
                             })
@@ -51,7 +48,7 @@ class Command(BaseCommand):
                             if not tarea_moodle:
                                 continue
 
-                            tarea, created = Tarea.objects.update_or_create(
+                            tarea, _ = Tarea.objects.update_or_create(
                                 moodle_id=tarea_moodle['id'],
                                 defaults={
                                     'nombre': tarea_moodle.get('name', 'Sin nombre'),
@@ -63,22 +60,28 @@ class Command(BaseCommand):
                                 }
                             )
 
-                            # 4️⃣ Obtener calificaciones de la tarea
                             grades_response = call_moodle_api('mod_assign_get_grades', {
                                 'assignmentids[0]': tarea.moodle_id
                             })
 
+                            calificacion = None
+                            entregada = False
+
                             for assignment in grades_response.get('assignments', []):
                                 for grade in assignment.get('grades', []):
                                     if int(grade.get('userid')) == alumno.alumno_moodle_id:
-                                        TareaAlumno.objects.update_or_create(
-                                            tarea=tarea,
-                                            alumno=alumno,
-                                            defaults={
-                                                'calificacion': float(grade.get('grade')) if grade.get('grade') is not None else None,
-                                                'entregada': grade.get('grade') is not None,
-                                            }
-                                        )
+                                        if grade.get('grade') is not None:
+                                            calificacion = float(grade.get('grade'))
+                                            entregada = True
+
+                            TareaAlumno.objects.update_or_create(
+                                tarea=tarea,
+                                alumno=alumno,
+                                defaults={
+                                    'calificacion': calificacion,
+                                    'entregada': entregada,
+                                }
+                            )
 
                 print(f"♻️ Tareas sincronizadas para materia: {materia.nombre} ({alumno.nombre})")
         

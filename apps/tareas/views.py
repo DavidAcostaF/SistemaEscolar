@@ -1,55 +1,77 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
 from apps.moodle import api_client
-from apps.comun.utils import format_fecha
 import datetime
+from apps.materias.models import MateriaAlumno
+from apps.tareas.models import Tarea, TareaAlumno
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+
+
 # Create your views here.
 
 class TareasPendientesView(LoginRequiredMixin, View):
     template_name = 'tareas/tareas_pendientes.html'
 
     def get(self, request):
-        alumno_id = request.user.alumno_moodle_id
-        materias = api_client.get_tareas_pendientes_por_curso(alumno_id)
-        return render(request, self.template_name, {'materias': materias})
+        alumno = request.user.alumno
+
+        materias_data = []
+
+        materias_alumno = MateriaAlumno.objects.filter(
+            alumno=alumno
+        ).select_related('materia')
+
+        for materia_alumno in materias_alumno:
+            materia = materia_alumno.materia
+
+            tareas_pendientes = TareaAlumno.objects.filter(
+                alumno=alumno,
+                tarea__materia=materia,
+                entregada=False
+            ).select_related('tarea')
+
+            tareas_info = []
+            for tarea_alumno in tareas_pendientes:
+                tarea = tarea_alumno.tarea
+                tareas_info.append({
+                    'id': tarea.id,
+                    'nombre': tarea.nombre,
+                    'intro': tarea.descripcion or '',
+                    'duedate': tarea.fecha_entrega.strftime('%d/%m/%Y') if tarea.fecha_entrega else 'Sin fecha'
+                })
+
+            if tareas_info:
+                materias_data.append({
+                    'id': materia.id,
+                    'nombre': materia.nombre,
+                    'tareas': tareas_info
+                })
+
+        return render(request, self.template_name, {'materias': materias_data})
 
 
 class DetalleTareaView(LoginRequiredMixin, View):
     template_name = 'tareas/detalle_tarea.html'
 
     def get(self, request, curso_id, tarea_id):
-        assignments_response = api_client.call_moodle_api('mod_assign_get_assignments', {'courseids[0]': curso_id})
-        tarea = None
+        tarea = get_object_or_404(Tarea, id=tarea_id, materia__id=curso_id)
 
-        for course in assignments_response.get('courses', []):
-            if course['id'] == curso_id:
-                for assign in course.get('assignments', []):
-                    if assign['id'] == tarea_id:
-                        tarea = assign
-                        break
-
-        if not tarea:
-            return render(request, '404.html')
-
-
-        allowsubmissionsfromdate_str, allowsubmissionsfromdate_dt = format_fecha(tarea.get('allowsubmissionsfromdate', None))
-        duedate_str, duedate_dt = format_fecha(tarea.get('duedate', None))
-        cutoffdate_str, cutoffdate_dt = format_fecha(tarea.get('cutoffdate', None))
+        allowsubmissionsfromdate_str = tarea.fecha_apertura.strftime('%d/%m/%Y') if tarea.fecha_apertura else "No disponible"
+        duedate_str = tarea.fecha_entrega.strftime('%d/%m/%Y') if tarea.fecha_entrega else "No disponible"
+        cutoffdate_str = "No disponible"  
 
         estado_entrega = "No disponible"
-        if duedate_dt:
-            now = datetime.datetime.now()
-            if now > duedate_dt:
+        if tarea.fecha_entrega:
+            now = timezone.now()
+            if now > tarea.fecha_entrega:
                 estado_entrega = "Entrega vencida"
             else:
                 estado_entrega = "A tiempo"
 
         contexto = {
-            'nombre': tarea.get('name', 'Sin nombre'),
-            'intro': tarea.get('intro', 'Sin instrucciones disponibles'),
+            'nombre': tarea.nombre,
+            'intro': tarea.descripcion or "Sin instrucciones disponibles",
             'allowsubmissionsfromdate': allowsubmissionsfromdate_str,
             'duedate': duedate_str,
             'cutoffdate': cutoffdate_str,

@@ -28,21 +28,18 @@ class MateriasView(ListView):
         for materia_alumno in context['materias']:
             materia = materia_alumno.materia
 
-            # 🧠 1. Obtener tareas entregadas
             tareas_alumno = TareaAlumno.objects.filter(
                 tarea__materia=materia,
                 alumno=self.request.user.alumno,
                 entregada=True
             ).select_related('tarea')
 
-            # 🧠 2. Agrupar las calificaciones por parcial
             calificaciones_por_parcial = defaultdict(list)
             for tarea_alumno in tareas_alumno:
                 parcial = tarea_alumno.tarea.parcial if tarea_alumno.tarea.parcial else 'Sin Parcial'
                 if tarea_alumno.calificacion is not None:
                     calificaciones_por_parcial[parcial].append(tarea_alumno.calificacion)
 
-            # 🧠 3. Definir manualmente los parciales que quieres mostrar
             parciales_definidos = ['Parcial 1', 'Parcial 2', 'Parcial 3']
 
             parciales = []

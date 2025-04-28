@@ -1,18 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-<div class="profile-section">
-  <img src="https://i.imgur.com/Ws6Tmn0.png" alt="Avatar">
-  <p class="mt-2"><strong>Juanito Pérez Esquer</strong></p>
+<div class="profile-section text-center mt-4">
+  {% if alumno.foto_url %}
+    <img src="{{ alumno.foto_archivo.url }}" alt="Avatar" class="rounded-circle" width="120" height="120">
+  {% else %}
+    <img src="{% static 'img/default-avatar.png' %}" alt="Avatar" class="rounded-circle" width="120" height="120">
+  {% endif %}
+  <p class="mt-2"><strong>{{ alumno.nombre }}</strong></p>
 </div>
 
-<div class="info-box">Promedio General<br><span class="text-muted">9.06</span></div>
-<div class="info-box">Rendimiento<br><span class="text-muted">Alto</span></div>
-<div class="info-box">Tareas Pendiente(s)<br><span class="text-muted">3</span></div>
+<div class="px-4">
+  <div class="info-box mb-3 border rounded-pill p-3 text-center">
+    Promedio General<br><span class="text-muted">{{ promedio_general|default:"N/A" }}</span>
+  </div>
+  <div class="info-box mb-3 border rounded-pill p-3 text-center">
+    Rendimiento<br><span class="text-muted">{{ rendimiento|default:"N/A" }}</span>
+  </div>
+  <div class="info-box mb-3 border rounded-pill p-3 text-center">
+    Tareas Pendiente(s)<br><span class="text-muted">{{ tareas_pendientes }}</span>
+  </div>
+</div>
 
-<div class="footer-note">
-  Dudas acerca de la información mostrada en la aplicación puede dirigirse a las diferentes instancias en el campus de la institución
+<div class="footer-note mt-4 text-center text-muted small px-3">
+  Dudas acerca de la información mostrada en la aplicación puede dirigirse a las diferentes instancias en el campus de la institución.
 </div>
 {% endblock %}
