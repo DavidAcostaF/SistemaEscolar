@@ -10,7 +10,7 @@
 - Docker (opcional si vas a correr Moodle en contenedor)
 - Moodle configurado y accesible (por API)
 
----
+```
 
 ## 🧾 1. Clonar el repositorio
 
