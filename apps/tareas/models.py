@@ -11,6 +11,7 @@ class Tarea(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     fecha_apertura = models.DateTimeField(blank=True, null=True)
     fecha_entrega = models.DateTimeField(blank=True, null=True)
+    parcial = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.nombre} ({self.materia.nombre})"

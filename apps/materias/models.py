@@ -5,7 +5,7 @@ from apps.users.models import Alumno
 
 class Materia(models.Model):
     nombre = models.CharField(max_length=255)
-    materia_moodle_id = models.PositiveIntegerField(unique=True)
+    moodle_id = models.PositiveIntegerField(unique=True)
     
     def __str__(self):
         return self.nombre

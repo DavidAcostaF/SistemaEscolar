@@ -43,13 +43,14 @@ class RegisterForm(forms.ModelForm):
         if not alumno:
             raise forms.ValidationError("El username de Moodle no existe.")
         
-        self.alumno = alumno
+        self.alumno_moodle = alumno
 
         return cleaned_data
     
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
+        self.alumno = self.alumno_moodle
         # user.alumno_moodle_id = self.alumno_moodle_id
         if commit:
             user.save()

@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
             for curso in cursos:
                 materia, created = Materia.objects.update_or_create(
-                    materia_moodle_id=curso['id'],
+                    moodle_id=curso['id'],
                     defaults={'nombre': curso['fullname']}
                 )
 
