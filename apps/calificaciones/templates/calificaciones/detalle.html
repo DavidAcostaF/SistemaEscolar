@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ etiqueta }} – Calificaciones{% endblock %}
+
+{% block content %}
+<div class="text-center mt-3 mb-2">
+  <h6><strong>Calificaciones – {{ etiqueta }}</strong></h6>
+</div>
+
+<div class="px-4">
+  {% for materia, tareas in materias.items %}
+    <h6 class="mt-4">{{ materia }}</h6>
+    <ul class="list-group mb-3">
+      {% for item in tareas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>{{ item.tarea }}</div>
+          <div>
+            {{ item.calificacion|default:"Sin nota" }}
+            {% if item.entregada %}
+              <span class="text-success">✔️</span>
+            {% else %}
+              <span class="text-danger">❌</span>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% empty %}
+    <p class="text-muted">No hay tareas registradas en esta categoría.</p>
+  {% endfor %}
+</div>
+
+<div class="footer-note mt-3 text-center small text-muted px-4 pb-3">
+  La siguiente información es un historial de calificaciones del alumno.
+  Ante cualquier duda mostrada en la aplicación puede dirigirse a las diferentes instancias en el campus de la institución.
+</div>
+{% endblock %}

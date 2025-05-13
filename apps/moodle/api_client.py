@@ -27,6 +27,15 @@ def call_moodle_api(wsfunction, params=None):
     response.raise_for_status()
     return response.json()
 
+
+def enviar_mensaje_a_maestro(moodle_id_maestro, contenido):
+    return call_moodle_api("core_message_send_instant_messages", {
+        "messages[0][touserid]": moodle_id_maestro,
+        "messages[0][text]": contenido,
+        "messages[0][textformat]": 1
+    })
+
+
 # MATERIAS
 def get_materias_con_promedios_por_parcial(user_id):
     cursos = call_moodle_api('core_enrol_get_users_courses', {'userid': user_id})
@@ -122,3 +131,5 @@ def get_tareas_pendientes_por_curso(user_id):
         })
 
     return tareas_pendientes
+
+

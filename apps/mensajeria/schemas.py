@@ -1,0 +1,9 @@
+# apps/mensajeria/schemas.py
+from ninja import Schema
+
+class MensajeHookIn(Schema):
+    from_user: int
+    to_user: int
+    message: str
+    courseid: int
+    timestamp: int
