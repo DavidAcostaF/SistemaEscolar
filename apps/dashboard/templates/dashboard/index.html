@@ -5,15 +5,20 @@
 
 {% block content %}
 <div class="profile-section text-center mt-4">
-  {% if alumno.foto_url %}
+
+  <!-- Nombre del usuario destacado -->
+  <h5 class="mb-3"><strong>{{ alumno.username }}</strong></h5>
+
+  <!-- Foto de perfil -->
+  {% if alumno.foto_archivo %}
     <img src="{{ alumno.foto_archivo.url }}" alt="Avatar" class="rounded-circle" width="120" height="120">
   {% else %}
     <img src="{% static 'img/default-avatar.png' %}" alt="Avatar" class="rounded-circle" width="120" height="120">
   {% endif %}
-  <p class="mt-2"><strong>{{ alumno.nombre }}</strong></p>
+
 </div>
 
-<div class="px-4">
+<div class="px-4 mt-3">
   <div class="info-box mb-3 border rounded-pill p-3 text-center">
     Promedio General<br><span class="text-muted">{{ promedio_general|default:"N/A" }}</span>
   </div>
