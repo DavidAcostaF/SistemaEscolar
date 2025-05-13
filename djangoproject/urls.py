@@ -19,8 +19,6 @@ from django.urls import path,include
 # from .api import api
 from django.conf import settings
 from django.conf.urls.static import static
-from .api import api
-
 urlpatterns = ([
     
     path('', include('apps.dashboard.urls')),
@@ -30,7 +28,6 @@ urlpatterns = ([
     path('', include('apps.tareas.urls')),
     path('', include('apps.mensajeria.urls')),
     path('admin/', admin.site.urls),
-    path("api/", api.urls),
 
     # path("api/", api.urls),
 ]

@@ -1,5 +1,0 @@
-# api/hooks/schemas.py
-from ninja import Schema
-
-class MateriaHookIn(Schema):
-    userid: int

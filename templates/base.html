@@ -150,9 +150,9 @@
       <a href="{% url 'materias:materias' %}" class="menu-link p-3{% if current_page == 'materias' %}active{% endif %}">Materias</a>
       <a href="{% url 'calificaciones:calificaciones' %}" class="menu-link  p-3 {% if current_page == 'calificaciones' %}active{% endif %}">Calificaciones</a>
       <a href="{% url 'tareas:tareas_pendientes' %}" class="menu-link p-3 {% if current_page == 'tareas' %}active{% endif %}">Tareas Pendientes</a>
-      <a href="{% url 'mensajeria:lista_cursos' %}" class="menu-link p-3 {% if current_page == 'mensajeria' %}active{% endif %}">Mensajería</a>
+      <a href="{% url 'mensajeria:mensajeria' %}" class="menu-link p-3 {% if current_page == 'mensajeria' %}active{% endif %}">Mensajería</a>
       <a class="menu-link p-3 {% if current_page == 'configuracion' %}active{% endif %}">Configuración</a>
-      <div class="btn-close-session"><a href="{% url 'users:logout' %}" class="text-reset text-decoration-none">Cerrar Sesión</a></div>
+      <div class="btn-close-session"><a href="{% url 'users:login' %}" class="text-reset text-decoration-none">Cerrar Sesión</a></div>
     </div>
 
     <!-- Fondo gris -->

@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Alumno
 
 class RegisterForm(forms.ModelForm):
-    alumno_moodle = forms.CharField(label='Username de moodle',widget=forms.TextInput(attrs={'placeholder': 'Username', "class": "form-control input-group"}))
+    alumno_moodle = forms.CharField(label='Username de moodle')
 
     password1 = forms.CharField(
         label='Contraseña',
@@ -14,7 +14,7 @@ class RegisterForm(forms.ModelForm):
     )
     password2 = forms.CharField(
         label='Confirmar Contraseña',
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar Contraseña',"class": "form-control"}),
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar Contraseña'}),
     )
 
     class Meta:
@@ -28,9 +28,7 @@ class RegisterForm(forms.ModelForm):
             'username': None,
         }
 
-    widgets = {
-        'username': forms.TextInput(attrs={'placeholder': 'Nombre de usuario', "class": "form-control"}),
-    }
+
     
     def clean(self):
         cleaned_data = super().clean()
@@ -45,7 +43,6 @@ class RegisterForm(forms.ModelForm):
         if not alumno:
             raise forms.ValidationError("El username de Moodle no existe.")
         
-        
         self.alumno_moodle = alumno
 
         return cleaned_data
@@ -53,10 +50,7 @@ class RegisterForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        if not self.alumno_moodle:
-            raise forms.ValidationError("El username de Moodle no existe.")
-        
-        user.alumno = self.alumno_moodle
+        self.alumno = self.alumno_moodle
         # user.alumno_moodle_id = self.alumno_moodle_id
         if commit:
             user.save()

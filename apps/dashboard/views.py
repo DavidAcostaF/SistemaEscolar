@@ -32,7 +32,7 @@ class IndexView(View):
             .filter(alumno=alumno, entregada=False)
             .count()
         )
-        print(alumno,"alumno")
+
         context = {
             'alumno': alumno,
             'promedio_general': round(promedio, 2) if promedio else None,

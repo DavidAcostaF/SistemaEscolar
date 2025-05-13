@@ -6,8 +6,7 @@ from apps.users.models import Alumno
 # Create your models here.
 class Tarea(models.Model):
     nombre = models.CharField(max_length=255)
-    moodle_id = models.IntegerField(unique=True)            # ← cmid (para vincular evento)
-    moodle_assign_id = models.IntegerField(null=True) 
+    moodle_id = models.PositiveIntegerField(unique=True)
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='tareas')
     descripcion = models.TextField(blank=True, null=True)
     fecha_apertura = models.DateTimeField(blank=True, null=True)

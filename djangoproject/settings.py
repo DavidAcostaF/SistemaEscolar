@@ -58,8 +58,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_filters",
     "ninja_extra",
-    "django_q",
-    "django_extensions"
+    "django_q"
 
 ]
 

@@ -1,12 +1,12 @@
 
-from ninja_extra import NinjaExtraAPI
-from apps.users.api_controller import AlumnosHookController
-from apps.materias.api_controller import MateriasHookController
-from apps.tareas.api_controller import TareasHookController
-from apps.mensajeria.api_controller import MensajesHookController
+# from django.core.exceptions import ObjectDoesNotExist
+# from ninja.errors import ValidationError
+# from ninja_extra import NinjaExtraAPI
 
-api = NinjaExtraAPI()
-api.register_controllers(AlumnosHookController)
-api.register_controllers(MateriasHookController)
-api.register_controllers(TareasHookController)
-api.register_controllers(MensajesHookController)
+# # Security / Authentication endpoints
+# from ninja_jwt.controller import NinjaJWTDefaultController
+# from apps.products.api_controller import ProductsController
+# # Registration of API Controllers
+# api = NinjaExtraAPI(csrf=False)  # CSRF Protection
+
+# api.register_controllers(ProductsController)

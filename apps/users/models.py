@@ -10,7 +10,7 @@ class Alumno(models.Model):
     foto_archivo = models.ImageField(upload_to='alumnos_fotos/', blank=True, null=True)
 
     def __str__(self):
-        return self.username
+        return self.nombre
     class Meta:
         db_table = 'alumnos'
         verbose_name = "Alumno"
@@ -18,7 +18,7 @@ class Alumno(models.Model):
         ordering = ['id']
 
 class User(AbstractUser):
-    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, blank=False, null=False)
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, blank=True, null=True)
     
     def __str__(self):
         # Always return something logic to the model in __str__, and never use .format, use fstring instead
