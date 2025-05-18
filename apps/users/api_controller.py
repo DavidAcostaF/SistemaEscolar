@@ -1,18 +1,17 @@
+# apps/alumnos/controllers.py
 from django.core.handlers.wsgi import WSGIRequest
-from ninja_extra import api_controller, permissions, route
-from ninja_extra.pagination import PaginatedResponseSchema, paginate
-from ninja_jwt.authentication import JWTAuth
 from ninja_extra import api_controller, http_post
 from ninja_extra.controllers import ControllerBase
+from django.http import JsonResponse
+from urllib.parse import urlparse
+from django.core.files.base import ContentFile
+from apps.comun.auth import APIKeyAuth 
 from apps.users.models import Alumno
 from apps.moodle.api_client import call_moodle_api
-from django.core.files.base import ContentFile
-import requests, os
-from urllib.parse import urlparse
-from django.http import JsonResponse
 from apps.users.schemas import AlumnoHookIn
+import requests, os
 
-@api_controller("/hooks/alumnos", tags=["Alumnos"])
+@api_controller("/hooks/alumnos", tags=["Alumnos"], auth=APIKeyAuth())
 class AlumnosHookController(ControllerBase):
 
     @http_post("/", url_name="recibir_alumno")
@@ -47,5 +46,6 @@ class AlumnosHookController(ControllerBase):
                         alumno.foto_archivo.save(foto_filename, ContentFile(response.content), save=True)
             except Exception as e:
                 return JsonResponse({"error": f"Error descargando foto: {str(e)}"}, status=500)
+
         print(f"Alumno {alumno.nombre} {'creado' if created else 'actualizado'}")
         return {"status": "ok", "creado": created}

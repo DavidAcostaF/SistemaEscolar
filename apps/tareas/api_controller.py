@@ -1,5 +1,5 @@
 import logging
-from ninja_extra import api_controller, http_post,route
+from ninja_extra import api_controller, http_post, route
 from ninja_extra.controllers import ControllerBase
 from django.http import JsonResponse
 from .schemas import TareaCrearHookIn, TareaCalificarHookIn
@@ -8,9 +8,11 @@ from apps.materias.models import Materia, MateriaAlumno
 from apps.tareas.models import Tarea, TareaAlumno
 from apps.moodle.api_client import call_moodle_api
 from apps.comun.utils import timestamp_to_datetime
+from apps.comun.auth import APIKeyAuth  # ← esquema de autenticación
+
 import time
 
-@api_controller("/hooks/tarea", tags=["Tareas"])
+@api_controller("/hooks/tarea", tags=["Tareas"], auth=APIKeyAuth())  # ← se aplica autenticación aquí
 class TareasHookController(ControllerBase):
 
     @route.post("/crear/", url_name="crear_tarea")
@@ -42,7 +44,7 @@ class TareasHookController(ControllerBase):
 
             print("⏳ Tarea no encontrada aún, esperando 3 segundos...")
             time.sleep(3)
-        # Obtener sección (parcial)
+
         parcial = "Sin parcial"
         try:
             secciones_response = call_moodle_api("core_course_get_contents", {
@@ -58,10 +60,10 @@ class TareasHookController(ControllerBase):
         except Exception as e:
             print(f"⚠️ Error al obtener la sección: {e}")
         print(tarea_moodle)
-        tarea, _ = Tarea.objects.update_or_create(
-            moodle_id=tarea_moodle["cmid"],  # ← Este es el cmid, identificador único de la tarea
+        tarea_obj, _ = Tarea.objects.update_or_create(
+            moodle_id=tarea_moodle["cmid"],
             defaults={
-                "moodle_assign_id": tarea_moodle["id"],  # ← Este es el assign.id (para usar en get_grades)
+                "moodle_assign_id": tarea_moodle["id"],
                 "nombre": tarea_moodle.get("name", "Sin nombre"),
                 "descripcion": tarea_moodle.get("intro", ""),
                 "fecha_apertura": timestamp_to_datetime(tarea_moodle.get("allowsubmissionsfromdate")),
@@ -75,7 +77,7 @@ class TareasHookController(ControllerBase):
         creados = 0
         for alumno in alumnos:
             _, creado = TareaAlumno.objects.get_or_create(
-                tarea=tarea,
+                tarea=tarea_obj,
                 alumno=alumno,
                 defaults={"entregada": False}
             )
@@ -89,7 +91,6 @@ class TareasHookController(ControllerBase):
         print(data)
         print(f"🔄 Calificando tarea con ID {data.tareaid} para el usuario {data.userid}")
 
-        # Buscar tarea por cmid
         tarea = Tarea.objects.filter(moodle_id=data.cmid).first()
         if not tarea:
             print(f"⚠️ Tarea con cmid {data.cmid} no encontrada")
@@ -101,7 +102,6 @@ class TareasHookController(ControllerBase):
             print(f"⚠️ Alumno con ID {data.userid} no encontrado")
             return JsonResponse({"error": "Alumno no encontrado"}, status=404)
 
-        # Usar el assign.id guardado en moodle_assign_id para consultar la nota
         assignid = tarea.moodle_assign_id
         if not assignid:
             print("⚠️ La tarea no tiene assignid asociado (moodle_assign_id está vacío)")
@@ -130,5 +130,485 @@ class TareasHookController(ControllerBase):
         print("🎯 Registro", "creado" if creado else "actualizado", obj.calificacion)
 
         return {"status": "ok", "mensaje": "Calificación registrada"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

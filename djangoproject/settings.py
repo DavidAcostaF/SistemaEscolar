@@ -145,6 +145,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# settings.py
+API_KEY = os.getenv('API_KEY')
 
 
 # Internationalization

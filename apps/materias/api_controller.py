@@ -6,8 +6,9 @@ from apps.moodle.api_client import call_moodle_api
 from apps.materias.models import Materia, MateriaAlumno
 from apps.users.models import Alumno
 from apps.materias.schemas import MateriaHookIn
+from apps.comun.auth import APIKeyAuth
 
-@api_controller("/hooks/materias/", tags=["Materias"])
+@api_controller("/hooks/materias/", tags=["Materias"], auth=APIKeyAuth())
 class MateriasHookController(ControllerBase):
 
     @http_post("/", url_name="recibir_materias")
