@@ -1,5 +1,8 @@
 {% load crispy_forms_tags %}
-
+{% block head %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock head %}
 
 {% block content %}
 <style>
@@ -16,7 +19,6 @@
 
   .mobile-container {
     width: 300px;
-    height: 600px;
     background-color: white;
     border-radius: 20px;
     overflow: hidden;
@@ -46,12 +48,6 @@
     background-color: #111;
     color: white;
     font-weight: bold;
-  }
-
-  .form-control {
-    border-radius: 50px;
-    padding: 12px 20px;
-    margin-bottom: 15px;
   }
 
   .input-group {
@@ -94,6 +90,11 @@
     margin-top: 10px;
     cursor: pointer;
   }
+
+  input[type="text"],
+  input[type="password"] {
+    border-radius: 50px !important;
+  }
 </style>
 
 <div class="mobile-container">
@@ -110,7 +111,10 @@
       </div>
     {% endif %}
 
-    {{ form.username|as_crispy_field }}
+    <label class="form-label">Username de moodle*</label>
+    <div class="input-group">
+      {{ form.username }}
+    </div>
 
     <label class="form-label">Contraseña</label>
     <div class="input-group">

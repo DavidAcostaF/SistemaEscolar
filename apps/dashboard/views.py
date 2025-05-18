@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.db.models import Avg, Q
 from apps.users.models import Alumno
 from apps.tareas.models import TareaAlumno
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin,View):
     template_name = 'dashboard/index.html'
 
     def get(self, request):
@@ -32,7 +33,7 @@ class IndexView(View):
             .filter(alumno=alumno, entregada=False)
             .count()
         )
-
+        print(alumno,"alumno")
         context = {
             'alumno': alumno,
             'promedio_general': round(promedio, 2) if promedio else None,

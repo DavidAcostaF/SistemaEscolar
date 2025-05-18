@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_filters",
     "ninja_extra",
-    "django_q"
+    "django_q",
+    "django_extensions"
 
 ]
 
@@ -126,7 +127,7 @@ DATABASES = {
     }
 }
 
-
+LOGIN_URL = '/login'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

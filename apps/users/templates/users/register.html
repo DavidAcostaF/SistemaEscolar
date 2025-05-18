@@ -1,7 +1,7 @@
-{% load crispy_forms_tags %}
-
-
+{% load static %}
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 <style>
   body {
     background-color: white;
@@ -41,6 +41,17 @@
     background-color: #111;
     color: white;
     font-weight: bold;
+  }
+
+  .input-group-custom {
+    margin-bottom: 15px;
+  }
+
+  .input-group-custom input {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 1px solid #ced4da;
   }
 
   .password-wrapper {
@@ -103,8 +114,15 @@
       </div>
     {% endif %}
 
-    {{ form.username|as_crispy_field }}
-    {{ form.alumno_moodle|as_crispy_field }}
+    <label for="{{ form.username.id_for_label }}" class="form-label">Crear Usuario*</label>
+    <div class="input-group-custom">
+      {{ form.username }}
+    </div>
+
+    <label for="{{ form.alumno_moodle.id_for_label }}" class="form-label">Username de moodle*</label>
+    <div class="input-group-custom">
+      {{ form.alumno_moodle }}
+    </div>
 
     <label for="{{ form.password1.id_for_label }}" class="form-label">Crear Contraseña</label>
     <div class="password-wrapper">
