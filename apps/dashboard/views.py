@@ -5,8 +5,13 @@ from apps.users.models import Alumno
 from apps.tareas.models import TareaAlumno
 from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.comun.mixins import RedireccionPorRolMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from collections import defaultdict
+from statistics import mean
+from apps.materias.models import MateriaAlumno
+from django.contrib import messages
 
-class IndexView(RedireccionPorRolMixin,View):
+class IndexView(RedireccionPorRolMixin,SuccessMessageMixin,View):
     template_name = 'dashboard/index.html'
 
     def get(self, request):
@@ -34,7 +39,10 @@ class IndexView(RedireccionPorRolMixin,View):
             .filter(alumno=alumno, entregada=False)
             .count()
         )
-        print(alumno,"alumno")
+        alertas = obtener_alertas_riesgo_reprobacion(alumno)
+        if alertas:
+            print(alertas)
+            messages.error(request, f"Alertas de riesgo de reprobación: {', '.join(alertas)}")
         context = {
             'alumno': alumno,
             'promedio_general': round(promedio, 2) if promedio else None,
@@ -42,3 +50,30 @@ class IndexView(RedireccionPorRolMixin,View):
             'tareas_pendientes': tareas_pendientes
         }
         return render(request, self.template_name, context)
+
+
+
+
+
+def obtener_alertas_riesgo_reprobacion(alumno):
+    alertas = []
+
+    materias = MateriaAlumno.objects.filter(alumno=alumno).select_related('materia')
+
+    for mat in materias:
+        tareas = mat.materia.tareas.all().prefetch_related('alumnos_tarea')
+        calificaciones = defaultdict(list)
+
+        for tarea in tareas:
+            tarea_alumno = tarea.alumnos_tarea.filter(alumno=alumno, entregada=True).first()
+            if tarea_alumno and tarea_alumno.calificacion is not None:
+                parcial = tarea.parcial or "Sin Parcial"
+                calificaciones[parcial].append(tarea_alumno.calificacion)
+
+        for parcial, califs in calificaciones.items():
+            if califs:
+                promedio = round(mean(califs), 2)
+                if promedio < 70:
+                    alertas.append(f"{mat.materia.nombre} - {parcial} ({promedio})")
+
+    return alertas

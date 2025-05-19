@@ -8,6 +8,7 @@
   <!-- Bootstrap & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     body {
@@ -136,6 +137,28 @@
       background-color: #222;
     }
 
+    .swal2-popup {
+      max-width: 14vw !important;   /* Limita el ancho del modal */
+      width: 14vw !important;
+      border-radius: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .swal2-title {
+      font-size: 1.3rem;
+    }
+
+    .swal2-html-container {
+      font-size: 1rem;
+      margin: 0.5em 0 0;
+    }
+
+    .swal2-confirm {
+      font-size: 0.9rem;
+      padding: 0.5em 1.5em;
+    }
+
+
   </style>
 
   {% block extra_css %}{% endblock %}
@@ -171,8 +194,10 @@
       <span><strong>Sistema</strong> Escuela</span>
     </div>
 
+
     <!-- Contenido dinámico -->
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
