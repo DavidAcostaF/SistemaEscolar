@@ -10,9 +10,10 @@ from statistics import mean
 from collections import defaultdict
 from apps.tareas.models import TareaAlumno
 from apps.tareas.models import Tarea
+from apps.comun.mixins import RedireccionPorRolMixin
 # Create your views here.
 
-class MateriasView(ListView):
+class MateriasView(RedireccionPorRolMixin,ListView):
     template_name = 'materias/materias.html'
     context_object_name = 'materias'
 

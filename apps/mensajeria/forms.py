@@ -1,14 +1,21 @@
 
 from django import forms
 
-class MensajeForm(forms.Form):
-    contenido = forms.CharField(
-        label="",
-        widget=forms.TextInput(attrs={
-            "class": "form-control rounded-start-pill p-3",
-            "placeholder": "Escribe algo..."
-        })
-    )
+from django import forms
+from .models import Mensaje
+
+class MensajeForm(forms.ModelForm):
+    class Meta:
+        model = Mensaje
+        fields = ['contenido']
+        widgets = {
+            'contenido': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Escribe tu mensaje...',
+                'autocomplete': 'off'
+            }),
+        }
+
 
 
 

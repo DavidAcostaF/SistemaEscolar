@@ -6,11 +6,12 @@ from apps.materias.models import MateriaAlumno
 from apps.tareas.models import Tarea, TareaAlumno
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from apps.comun.mixins import RedireccionPorRolMixin
 
 
 # Create your views here.
 
-class TareasPendientesView(LoginRequiredMixin, View):
+class TareasPendientesView(RedireccionPorRolMixin, View):
     template_name = 'tareas/tareas_pendientes.html'
 
     def get(self, request):
@@ -51,7 +52,7 @@ class TareasPendientesView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'materias': materias_data})
 
 
-class DetalleTareaView(LoginRequiredMixin, View):
+class DetalleTareaView(RedireccionPorRolMixin, View):
     template_name = 'tareas/detalle_tarea.html'
 
     def get(self, request, curso_id, tarea_id):

@@ -17,7 +17,7 @@
   <div class="px-3 pt-3">
     <div class="bg-dark text-white p-3 rounded-4 mb-3 d-flex justify-content-between align-items-center">
       <div>
-        <strong>Maestro del curso</strong><br>
+        <strong>Mensajes del curso</strong><br>
         <small>{{ curso.nombre }}</small>
       </div>
     </div>
@@ -26,16 +26,16 @@
   <!-- Mensajes -->
   <div class="chat-body d-flex flex-column gap-3">
     {% for mensaje in mensajes %}
-      {% if mensaje.es_enviado_por_alumno %}
-        <!-- Mensaje enviado por el alumno (Django) alineado a la derecha -->
+      {% if mensaje.emisor == request.user %}
+        <!-- Mensaje enviado por el usuario actual (alumno o maestro) -->
         <div class="align-self-end text-end">
-          <div class="bg-dark text-white p-3 rounded-4 d-inline-block ">
+          <div class="bg-dark text-white p-3 rounded-4 d-inline-block">
             {{ mensaje.contenido }}
             <br><span class="small text-light">{{ mensaje.fecha|date:"H:i" }}</span>
           </div>
         </div>
       {% else %}
-        <!-- Mensaje recibido del maestro (Moodle) alineado a la izquierda -->
+        <!-- Mensaje de otra persona -->
         <div class="align-self-start text-start">
           <div class="border rounded-4 p-3 text-dark bg-white d-inline-block" style="max-width: 90%;">
             {{ mensaje.contenido }}
@@ -45,7 +45,6 @@
       {% endif %}
     {% endfor %}
   </div>
-
 
   <!-- Formulario -->
   <div class="chat-input">

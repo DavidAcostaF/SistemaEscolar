@@ -7,6 +7,10 @@ from apps.materias.models import Materia, MateriaAlumno
 from apps.users.models import Alumno
 from apps.materias.schemas import MateriaHookIn
 from apps.comun.auth import APIKeyAuth
+import time
+from apps.comun.utils import timestamp_to_datetime
+from django.contrib.auth.hashers import make_password
+from apps.users.models import User
 
 @api_controller("/hooks/materias/", tags=["Materias"], auth=APIKeyAuth())
 class MateriasHookController(ControllerBase):
@@ -27,12 +31,10 @@ class MateriasHookController(ControllerBase):
         for curso in cursos:
             print(f"Curso: {curso}")
 
-            # Obtener categoría como etiqueta
             categorias = call_moodle_api('core_course_get_categories', {
                 'criteria[0][key]': 'id',
                 'criteria[0][value]': curso['category']
             })
-            print(f"Categorías: {categorias}")
             etiqueta = categorias[0]['name'] if categorias else 'Sin categoría'
 
             materia, created = Materia.objects.update_or_create(
@@ -43,9 +45,60 @@ class MateriasHookController(ControllerBase):
                 }
             )
 
-            MateriaAlumno.objects.get_or_create(
+            rol = None
+            email = None
+            intentos = 0
+            max_intentos = 10
+
+            while intentos < max_intentos:
+                intentos += 1
+                try:
+                    usuarios = call_moodle_api('core_enrol_get_enrolled_users', {
+                        'courseid': curso['id']
+                    })
+
+                    for u in usuarios:
+                        if u['id'] == data.userid:
+                            roles = u.get('roles', [])
+                            if roles:
+                                rol = roles[0]['shortname']
+                                email = u.get('email', None)
+                                print(f"✅ Rol encontrado en intento #{intentos}: {rol}")
+                                break
+                            else:
+                                print(f"⏳ Usuario encontrado sin roles. Intento #{intentos}")
+                    if rol:
+                        break
+                except Exception as e:
+                    print(f"⚠️ Error al obtener roles: {e}")
+
+                time.sleep(2)
+            print(f"Rol final: {rol}")
+
+            if rol in ["editingteacher"]:
+                try:
+                    user, creado = User.objects.get_or_create(
+                        username=alumno.username,
+                        defaults={
+                            "email": email,
+                            "password": make_password("123"),
+                            "first_name": alumno.nombre.split(" ")[0],
+                            "last_name": " ".join(alumno.nombre.split(" ")[1:]),
+                            "is_staff": True,
+                        }
+                    )
+                    if creado:
+                        print(f"✅ Usuario Django creado para maestro: {user.username}")
+                    else:
+                        print(f"ℹ️ Usuario Django ya existía: {user.username}")
+                except Exception as e:
+                    print(f"❌ Error creando usuario Django: {e}")
+
+
+            MateriaAlumno.objects.update_or_create(
                 alumno=alumno,
-                materia=materia
+                materia=materia,
+                defaults={"rol": rol or "student"}
             )
 
             materias_creadas.append({

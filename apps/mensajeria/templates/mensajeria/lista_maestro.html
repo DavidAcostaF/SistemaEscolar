@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Conversaciones recibidas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h5>Alumnos que han iniciado conversación</h5>
+  <ul class="list-group">
+    {% for alumno in alumnos %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ alumno.get_full_name }} ({{ alumno.username }})
+        <a href="{% url 'mensajeria:enviar_mensaje' curso_id=1 %}" class="btn btn-sm btn-outline-primary">Ver conversación</a>
+      </li>
+    {% empty %}
+      <li class="list-group-item">Ningún alumno te ha escrito todavía.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

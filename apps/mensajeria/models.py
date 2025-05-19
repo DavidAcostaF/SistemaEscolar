@@ -1,13 +1,16 @@
 from django.db import models
-from apps.users.models import Alumno
+from apps.users.models import Alumno, User
 from apps.materias.models import Materia
 # Create your models here.
+
 class Mensaje(models.Model):
-    moodle_id_remitente = models.IntegerField()
-    moodle_id_destinatario = models.IntegerField()
-    curso_moodle_id = models.IntegerField()
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    emisor = models.ForeignKey(User, on_delete=models.CASCADE)
     contenido = models.TextField()
-    enviado_por_django = models.BooleanField(default=False)
-    timestamp = models.DateTimeField()
-    recibido = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+    es_enviado_por_alumno = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.emisor.username} - {self.materia.nombre[:30]}"
+
 

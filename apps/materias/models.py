@@ -18,10 +18,12 @@ class Materia(models.Model):
         ordering = ['id']
 
 
+# models.py
 class MateriaAlumno(models.Model):
-    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, related_name='materias_alumno')
-    materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name='alumnos_materia')
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
     fecha_inscripcion = models.DateTimeField(auto_now_add=True)
+    rol = models.CharField(max_length=50, default="student")
 
     class Meta:
         db_table = 'materias_alumnos'

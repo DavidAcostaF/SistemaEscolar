@@ -4,13 +4,14 @@ from django.db.models import Avg, Q
 from apps.users.models import Alumno
 from apps.tareas.models import TareaAlumno
 from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.comun.mixins import RedireccionPorRolMixin
 
-class IndexView(LoginRequiredMixin,View):
+class IndexView(RedireccionPorRolMixin,View):
     template_name = 'dashboard/index.html'
 
     def get(self, request):
         alumno = request.user.alumno
-
+        is_staff = request.user.is_staff
         # Calculamos promedio general
         promedio = (
             TareaAlumno.objects

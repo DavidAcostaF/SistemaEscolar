@@ -4,9 +4,10 @@ from collections import defaultdict
 from django.shortcuts import get_object_or_404
 from apps.users.models import Alumno
 from apps.tareas.models import TareaAlumno
+from apps.comun.mixins import RedireccionPorRolMixin
 
 # Create your views here.
-class CalificacionesView(TemplateView):
+class CalificacionesView(RedireccionPorRolMixin,TemplateView):
     template_name = 'calificaciones/calificaciones.html'
     
     def get_context_data(self, **kwargs):
@@ -21,7 +22,7 @@ class CalificacionesView(TemplateView):
         ]
         return context
 
-class CalificacionesDetallesView(View):
+class CalificacionesDetallesView(RedireccionPorRolMixin,View):
     model = Alumno
     template_name = "calificaciones/detalle.html"
     context_object_name = "alumno"

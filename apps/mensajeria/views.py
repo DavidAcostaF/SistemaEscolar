@@ -1,98 +1,111 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from django.views.generic import ListView
+from django.views.generic import TemplateView, ListView, View
+from apps.users.models import User,Alumno
+from django.db.models import Exists, OuterRef
 from apps.materias.models import MateriaAlumno
-from django.views import View
-from django.shortcuts import get_object_or_404, redirect
 from apps.mensajeria.models import Mensaje
-from apps.mensajeria.forms import MensajeForm
+from django.shortcuts import get_object_or_404, redirect, render
 from apps.materias.models import Materia
-from apps.users.models import Alumno
-from apps.moodle.api_client import call_moodle_api, enviar_mensaje_a_maestro
-from datetime import datetime
+from django.urls import reverse_lazy
+from apps.mensajeria.forms import MensajeForm
 
 # Create your views here.
 
-class ListaCursosAlumnoView(ListView):
+class ListaCursosAlumnoView(TemplateView):
     template_name = "mensajeria/lista_cursos.html"
-    context_object_name = "cursos"
 
-    def get_queryset(self):
-        return MateriaAlumno.objects.filter(alumno=self.request.user.alumno).select_related("materia")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.user.alumno_id)
+        alumno = Alumno.objects.filter(id=self.request.user.alumno_id).first()
+        print(alumno)
+        if alumno:
+            context["cursos"] = MateriaAlumno.objects.filter(
+                alumno=alumno,
+                rol="student"
+            )
+        else:
+            context["cursos"] = []
+        return context
+
+
+class ListaAlumnosConMensajesView(TemplateView):
+    template_name = "mensajeria/lista_maestro.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usuario = self.request.user
+
+        materias_ids = MateriaAlumno.objects.filter(
+            alumno__username=usuario.username,
+            rol__in=["editingteacher", "teacher"]
+        ).values_list("materia", flat=True)
+
+        alumnos = User.objects.filter(
+            Exists(
+                Mensaje.objects.filter(
+                    materia__in=materias_ids,
+                    es_enviado_por_alumno=True,
+                    emisor=OuterRef("pk")
+                )
+            )
+        ).distinct()
+
+        context["alumnos"] = alumnos
+        return context
+
+
 
 class ChatCursoView(View):
+    form_class = MensajeForm
+    template_name = "mensajeria/mensajeria.html"
     def get(self, request, curso_id):
-        alumno = request.user.alumno
-        curso = get_object_or_404(Materia, id=curso_id)
+        materia = get_object_or_404(Materia, id=curso_id)
+        mensajes = Mensaje.objects.filter(materia=materia).order_by('fecha')
 
-        mensajes = Mensaje.objects.filter(
-            curso_moodle_id=curso.moodle_id
-        ).filter(
-            moodle_id_remitente=alumno.alumno_moodle_id
-        ) | Mensaje.objects.filter(
-            curso_moodle_id=curso.moodle_id,
-            moodle_id_destinatario=alumno.alumno_moodle_id
-        )
+        es_maestro = MateriaAlumno.objects.filter(
+            alumno=request.user.alumno_id,
+            materia=materia,
+            rol__in=["editingteacher", "teacher"]
+        ).exists()
 
-        mensajes = mensajes.order_by("timestamp")
-        form = MensajeForm()
+        if es_maestro:
+            mensajes = mensajes.filter(es_enviado_por_alumno=True)
+
+        form = None if es_maestro else self.form_class()
 
         return render(request, "mensajeria/mensajeria.html", {
-            "alumno": alumno,
-            "curso": curso,
+            "curso": materia,
             "mensajes": mensajes,
             "form": form,
         })
 
     def post(self, request, curso_id):
-        alumno = request.user.alumno
-        curso = get_object_or_404(Materia, id=curso_id)
-        form = MensajeForm(request.POST)
+        materia = get_object_or_404(Materia, id=curso_id)
+        user = request.user
 
+        # Determinar si el usuario es alumno
+        try:
+            alumno = user.alumno
+            es_alumno = MateriaAlumno.objects.filter(
+                alumno=alumno,
+                materia=materia,
+                rol="student"
+            ).exists()
+        except Alumno.DoesNotExist:
+            es_alumno = False
+
+        # Verifica también si es maestro
+        es_maestro = user.is_staff
+        # Solo permitir si es alumno o maestro
+        if not es_alumno and not es_maestro:
+            return redirect("mensajeria:enviar_mensaje", curso_id=curso_id)
+
+        form = self.form_class(request.POST)
         if form.is_valid():
-            contenido = form.cleaned_data["contenido"]
-
-            # Buscar maestro en Moodle
-            respuesta = call_moodle_api("core_enrol_get_enrolled_users", {
-                "courseid": curso.moodle_id
-            })
-
-            maestro = next((u for u in respuesta if any(
-                r['shortname'] in ["editingteacher", "teacher"] for r in u["roles"]
-            )), None)
-
-            if maestro:
-                enviar_mensaje_como_intermediario(
-                    id_destinatario=maestro["id"],
-                    nombre_alumno=alumno.nombre,
-                    contenido=contenido
-                )
-
-                Mensaje.objects.create(
-                    moodle_id_remitente=alumno.alumno_moodle_id,
-                    moodle_id_destinatario=maestro["id"],
-                    curso_moodle_id=curso.moodle_id,
-                    contenido=contenido,
-                    timestamp=datetime.now(),
-                    enviado_por_django=True
-                )
+            mensaje = form.save(commit=False)
+            mensaje.materia = materia
+            mensaje.emisor = user
+            mensaje.es_enviado_por_alumno = es_alumno
+            mensaje.save()
 
         return redirect("mensajeria:enviar_mensaje", curso_id=curso_id)
-    
-def enviar_mensaje_como_intermediario(id_destinatario, nombre_alumno, contenido):
-    mensaje_decorado = f"[Alumno: {nombre_alumno}] {contenido}"
-
-    data = {
-        "messages[0][touserid]": id_destinatario,
-        "messages[0][text]": mensaje_decorado,
-        "messages[0][textformat]": 1,
-    }
-
-    respuesta = call_moodle_api("core_message_send_instant_messages", data)
-
-    if isinstance(respuesta, list) and "id" in respuesta[0]:
-        print("✅ Mensaje enviado correctamente desde el intermediario.")
-        return True
-    else:
-        print("❌ Error al enviar el mensaje:", respuesta)
-        return False
