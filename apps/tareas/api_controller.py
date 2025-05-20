@@ -73,7 +73,7 @@ class TareasHookController(ControllerBase):
             }
         )
 
-        alumnos = Alumno.objects.filter(materias_alumno__materia=materia).distinct()
+        alumnos = Alumno.objects.filter(materiaalumno__materia=materia).distinct()
         creados = 0
         for alumno in alumnos:
             _, creado = TareaAlumno.objects.get_or_create(
