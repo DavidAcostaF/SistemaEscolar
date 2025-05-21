@@ -78,7 +78,6 @@ pip install -r requirements.txt
 Incluye:
 
 - Django
-- Django Q2
 - requests
 - psycopg2
 - Pillow (para manejo de imágenes)
@@ -118,43 +117,10 @@ Esto sincroniza:
 
 ---
 
-## 🧩 8. Configurar tareas automáticas (crons)
 
-El proyecto utiliza **Django Q2** para agendar tareas automáticas (cron interno).
 
-Agrega en admin panel (`/admin/django_q/schedule/`) o en código:
 
-```python
-from django_q.models import Schedule
-from django.core.management import call_command
-
-# En cualquier archivo de setup
-Schedule.objects.create(
-    func='django.core.management.call_command',
-    args='sync_moodle',
-    schedule_type=Schedule.HOURLY,  # O como prefieras
-    name='Sync Moodle cada hora',
-    repeats=-1
-)
-```
-
----
-
-## 🧩 9. Levantar workers de Django Q2
-
-En otra terminal diferente a donde corres el servidor, ejecuta:
-
-```bash
-python manage.py qcluster
-```
-
-Esto levantará los workers que ejecutarán las sincronizaciones automáticas.
-
-**Debes tener siempre corriendo `runserver` y `qcluster` en paralelo.**
-
----
-
-## ▶️ 10. Iniciar servidor
+## ▶️ 8. Iniciar servidor
 
 ```bash
 python manage.py runserver
